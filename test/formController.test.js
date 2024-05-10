@@ -11,16 +11,16 @@ import('chai').then(chai => {
                 .post('/submit')
                 .send({
                     name: 'hari',
-                    email: 'hari@example.com',
+                    email: 'hari@gmail.com',
                     car: 'car4'
                 })
                 .end((err, res) => {
                     if (err) {
                         console.error('Error submitting form:', err);
-                        done(err); // Pass the error to Mocha's done callback
+                        done(err); 
                         return;
                     }
-                    expect(res).to.have.status(200);
+                    //expect(res).to.have.status(200);
                     expect(res).to.have.status(200);
                     expect(res.text).to.equal('Form submitted successfully');
                     done();
@@ -33,14 +33,11 @@ import('chai').then(chai => {
             chai.request(app)
                 .get('/forms')
                 .end((err, res) => {
-                    //expect(res).to.have.status(200);
                     expect(res.body).to.be.an('array');
                     done();
                 });
         });
     });
-
-    //
     })
 }).catch(error => {
     console.error('Error loading Chai:', error);
