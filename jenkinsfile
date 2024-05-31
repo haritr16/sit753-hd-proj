@@ -29,6 +29,20 @@ pipeline {
            
         }
 
+        stage('SonarQube Scan') {
+            steps {
+                script {
+                    // Configure SonarQube environment
+                    def scannerHome = tool 'sonarqube_scanner'
+                    withSonarQubeEnv('Mysonarqube') {
+                        // Execute SonarQube Scanner
+                        powershell "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
+
+
         stage('Archive Artifacts') {
             steps {
                 archiveArtifacts artifacts: '**/build/*', allowEmptyArchive: true
