@@ -22,6 +22,17 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                powershell 'npm test'
+            }
+            post {
+                always {
+                    junit '**/test-results/*.xml'
+                }
+            }
+        }
+
         stage('Archive Artifacts') {
             steps {
                 archiveArtifacts artifacts: '**/build/*', allowEmptyArchive: true
