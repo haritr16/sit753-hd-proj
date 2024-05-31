@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "test": "mocha test/formController.test.js",
-    "build": "if not exist build mkdir build && xcopy /E /I .\\ build\\"
+    "build": "if not exist build mkdir build && xcopy /E /I .\\ build\\",
+    "sonar": "sonar-scanner -Dsonar.projectKey=sit753-hd-proj -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqa_7594534c9f4224adfd275b27103038d86777e18b"
+
   
   },
   "repository": {

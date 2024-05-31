@@ -1,6 +1,18 @@
 pipeline {
     agent any
 
+    
+    tools {
+        // Install the SonarQube scanner
+        sonarQubeScanner 'SonarQube Scanner'
+    }
+
+    environment {
+        // SonarQube environment variables
+        SONARQUBE_HOST_URL = 'http://localhost:9000'
+    }
+
+
     stages {
         stage('Checkout') {
             steps {
@@ -29,19 +41,25 @@ pipeline {
            
         }
 
-        stage('SonarQube Scan') {
+       stage('SonarQube Analysis') {
             steps {
-                script {
-                    // Configure SonarQube environment
-                    def scannerHome = tool 'sonarqube_scanner'
-                    withSonarQubeEnv('Mysonarqube') {
-                        // Execute SonarQube Scanner
-                        powershell "${scannerHome}/bin/sonar-scanner"
-                    }
+                withSonarQubeEnv('SonarQube') {
+                    powershell 'npm run sonar' // This will run the sonar script from package.json
                 }
             }
         }
 
+        stage('Quality Gate') {
+            steps {
+                script {
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+            }
+        }
+        
 
         stage('Archive Artifacts') {
             steps {
