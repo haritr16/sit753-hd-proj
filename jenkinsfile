@@ -33,9 +33,9 @@ pipeline {
             steps {
                 script {
                     // Stop any existing containers
-                    sh 'docker-compose down'
+                    powershell 'docker-compose down'
                     // Build and start the containers
-                    sh 'docker-compose up -d --build'
+                    powershell 'docker-compose up -d --build'
                 }
             }
         }
