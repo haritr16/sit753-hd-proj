@@ -10,7 +10,9 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                powershell 'node -v' 
+                powershell 'npm -v'
+                powershell 'npm install'
             }
         }
 
