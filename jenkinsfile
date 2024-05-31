@@ -32,6 +32,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        powershell 'docker login -u %DOCKER_HUB_USERNAME% -p %DOCKER_HUB_PASSWORD%'
+                    }
                     // Stop any existing containers
                     powershell 'docker-compose down'
                     // Build and start the containers
@@ -39,7 +43,6 @@ pipeline {
                 }
             }
         }
-        
 
         stage('Archive Artifacts') {
             steps {
