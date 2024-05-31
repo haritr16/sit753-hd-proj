@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "test": "mocha test/formController.test.js",
-    "build": "echo 'Building the project...' && mkdir -p build && cp -r * build/"
+    "build": "echo 'Building the project...' && if not exist build mkdir build && xcopy /E /I .\\ build\\"
+  
   },
   "repository": {
     "type": "git",
