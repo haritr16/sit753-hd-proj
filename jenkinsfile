@@ -18,7 +18,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                powershell 'npm start'
+                powershell 'npm run build'
             }
         }
 
