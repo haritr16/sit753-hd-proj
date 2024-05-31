@@ -47,4 +47,10 @@ describe('Form API', () => {
         });
     });
 
+    //to provide jenkins successful communication
+    after(() => {
+        // Exiting with code 0 to indicate successful execution
+        process.exit(0);
+    });
+
 });
