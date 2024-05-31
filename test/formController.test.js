@@ -1,13 +1,16 @@
 
 const app = require('../server');
-import('chai').then(chai => {
-    const expect = chai.expect;
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const expect = chai.expect;
 
-    describe('Form API', () => {
+chai.use(chaiHttp);
 
-        describe('/POST ', () => {
+describe('Form API', () => {
+
+    describe('/POST /submit', () => {
         it('should submit form data and return success message', (done) => {
-                chai.request(app)
+            chai.request(app)
                 .post('/submit')
                 .send({
                     name: 'hari',
@@ -20,28 +23,28 @@ import('chai').then(chai => {
                         done(err); 
                         return;
                     }
-                    //expect(res).to.have.status(200);
                     expect(res).to.have.status(200);
                     expect(res.text).to.equal('Form submitted successfully');
                     done();
                 });
         });
-    })
-        
-        describe('/GET ', () => {
+    });
+    
+    describe('/GET /forms', () => {
         it('should get forms data', (done) => {
             chai.request(app)
                 .get('/forms')
                 .end((err, res) => {
+                    if (err) {
+                        console.error('Error retrieving forms:', err);
+                        done(err); 
+                        return;
+                    }
+                    expect(res).to.have.status(200);
                     expect(res.body).to.be.an('array');
                     done();
                 });
         });
     });
-    })
-}).catch(error => {
-    console.error('Error loading Chai:', error);
+
 });
-
-
-
