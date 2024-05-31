@@ -26,11 +26,7 @@ pipeline {
             steps {
                 powershell 'npm test'
             }
-            post {
-                always {
-                    junit '**/test-results/*.xml'
-                }
-            }
+           
         }
 
         stage('Archive Artifacts') {
