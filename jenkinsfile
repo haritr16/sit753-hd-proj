@@ -45,11 +45,14 @@ pipeline {
                             docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
                          '''
 
-                    // Build Docker image
-                    powershell 'docker build -t myapp:latest .'
+                    // // Build Docker image
+                    // powershell 'docker build -t myapp:latest .'
 
-                    // Run Docker container
-                    powershell 'docker run -d -p 80:3000 --name myapp_container myapp:latest'
+                    // // Run Docker container
+                    // powershell 'docker run -d -p 80:3000 --name myapp_container myapp:latest'
+
+                    powershell 'docker-compose down'
+                    powershell 'docker-compose up -d --build'
                 }
             }
         }
