@@ -34,12 +34,10 @@ pipeline {
                 script {
                     // Login to Docker Hub
                     withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                        // Docker login command
-                        powershell '''
-                        $password = "${env:DOCKER_HUB_PASSWORD}" | ConvertTo-SecureString -AsPlainText -Force
-                        $credential = New-Object System.Management.Automation.PSCredential("${env:DOCKER_HUB_USERNAME}", $password)
-                        echo $credential.GetNetworkCredential().Password | docker login -u $credential.UserName --password-stdin
-                        '''
+                        powershell """
+                        \$password = '${DOCKER_HUB_PASSWORD}'
+                        echo \$password | docker login -u '${DOCKER_HUB_USERNAME}' --password-stdin
+                        """
                     }
 
                     // Check Docker login status
