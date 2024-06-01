@@ -33,11 +33,17 @@ pipeline {
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                        powershell '''
-                            $Env:DOCKER_HUB_PASSWORD | docker login -u $Env:DOCKER_HUB_USERNAME --password-stdin
-                        '''
-                    }
+                    // withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                    //     powershell '''
+                    //         $Env:DOCKER_HUB_PASSWORD | docker login -u $Env:DOCKER_HUB_USERNAME --password-stdin
+                    //     '''
+                    // }
+
+                    powershell '''
+                            $DOCKER_HUB_USERNAME = "hari1661"
+                            $DOCKER_HUB_PASSWORD = "Dockerhari"
+                            docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+                         '''
 
                     // Build Docker image
                     powershell 'docker build -t myapp:latest .'
