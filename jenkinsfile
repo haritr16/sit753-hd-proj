@@ -29,26 +29,21 @@ pipeline {
            
         }
 
-        stage('Deploy') {
-            environment {
-                DOCKER_HUB_USERNAME = credentials('hari1661').username
-                DOCKER_HUB_PASSWORD = credentials('hari1661').password
-            }
+         stage('Deploy') {
             steps {
                 script {
                     // Login to Docker Hub
-                    powershell '''
-                        $env:DOCKER_HUB_PASSWORD | docker login -u $env:DOCKER_HUB_USERNAME --password-stdin
-                    '''
-                    
-                    // Check Docker login status
-                    powershell 'docker info'
+                    withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        powershell '''
+                            $Env:DOCKER_HUB_PASSWORD | docker login -u $Env:DOCKER_HUB_USERNAME --password-stdin
+                        '''
+                    }
 
-                    // Stop and remove existing containers
-                    powershell 'docker-compose down'
+                    // Build Docker image
+                    powershell 'docker build -t myapp:latest .'
 
-                    // Build and start containers
-                    powershell 'docker-compose up -d --build'
+                    // Run Docker container
+                    powershell 'docker run -d -p 80:3000 --name myapp_container myapp:latest'
                 }
             }
         }
