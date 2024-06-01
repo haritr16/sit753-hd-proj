@@ -30,16 +30,17 @@ pipeline {
         }
 
         stage('Deploy') {
+            environment {
+                DOCKER_HUB_USERNAME = credentials('hari1661').username
+                DOCKER_HUB_PASSWORD = credentials('hari1661').password
+            }
             steps {
                 script {
                     // Login to Docker Hub
-                    withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                        powershell """
-                        \$password = '${DOCKER_HUB_PASSWORD}'
-                        echo \$password | docker login -u '${DOCKER_HUB_USERNAME}' --password-stdin
-                        """
-                    }
-
+                    powershell '''
+                        $env:DOCKER_HUB_PASSWORD | docker login -u $env:DOCKER_HUB_USERNAME --password-stdin
+                    '''
+                    
                     // Check Docker login status
                     powershell 'docker info'
 
