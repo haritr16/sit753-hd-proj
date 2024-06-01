@@ -32,25 +32,25 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-            // Login to Docker Hub
-            withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                // Docker login command
-                def dockerLoginCmd = """
-                $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
-                """
-                // Execute the Docker login command using PowerShell
-                powershell(script: dockerLoginCmd)
-            }
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        // Docker login command
+                        powershell '''
+                        $password = "${env:DOCKER_HUB_PASSWORD}" | ConvertTo-SecureString -AsPlainText -Force
+                        $credential = New-Object System.Management.Automation.PSCredential("${env:DOCKER_HUB_USERNAME}", $password)
+                        echo $credential.GetNetworkCredential().Password | docker login -u $credential.UserName --password-stdin
+                        '''
+                    }
 
-            // Check Docker login status
-            powershell 'docker info'
+                    // Check Docker login status
+                    powershell 'docker info'
 
-            // Stop and remove existing containers
-            powershell 'docker-compose down'
+                    // Stop and remove existing containers
+                    powershell 'docker-compose down'
 
-            // Build and start containers
-            powershell 'docker-compose up -d --build'
-        }
+                    // Build and start containers
+                    powershell 'docker-compose up -d --build'
+                }
             }
         }
 
