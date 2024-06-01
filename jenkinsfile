@@ -54,6 +54,15 @@ pipeline {
                     // powershell 'docker-compose down'
                     // powershell 'docker-compose up -d --build'
 
+                    // Stop and remove any existing container using the same port
+                    powershell '''
+                        $containerId = docker ps -q --filter "name=myapp_container"
+                        if ($containerId) {
+                            docker stop $containerId
+                            docker rm $containerId
+                        }
+                    '''
+
                     powershell 'docker build -t hari1661/sit753hd .'
                     powershell 'docker run -d -p 500:3000 hari1661/sit753hd'
                 }
