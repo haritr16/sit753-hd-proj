@@ -18,6 +18,7 @@ pipeline {
 
         stage('Build') {
             steps {
+                echo 'Build stage to create docker image'
                 powershell 'npm run build'
 
 
@@ -35,6 +36,7 @@ pipeline {
 
         stage('Test') {
             steps {
+                echo 'Test stage using chai and mocha'
                 powershell 'npm test'
             }
            
@@ -43,12 +45,7 @@ pipeline {
          stage('Deploy') {
             steps {
                 script {
-                    
-                    // powershell '''
-                    //         $DOCKER_HUB_USERNAME = "hari1661"
-                    //         $DOCKER_HUB_PASSWORD = "Dockerhari"
-                    //         docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-                    //      '''
+                    echo 'Deploy stage to deploy in docker container'
                     
                     withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
                         powershell '''
@@ -72,6 +69,7 @@ pipeline {
 
         stage('Archive Artifacts') {
             steps {
+                echo 'Archive artifacts'
                 archiveArtifacts artifacts: '**/build/*', allowEmptyArchive: true
             }
         }
