@@ -20,13 +20,6 @@ pipeline {
             steps {
                 powershell 'npm run build'
 
-                // powershell '''
-                //             $DOCKER_HUB_USERNAME = "hari1661"
-                //             $DOCKER_HUB_PASSWORD = "Dockerhari"
-                //             docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-                //          '''
-                //  powershell 'docker build -t hari1661/sit753hd .'
-
 
                   script {
                     withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
@@ -51,11 +44,18 @@ pipeline {
             steps {
                 script {
                     
-                    powershell '''
-                            $DOCKER_HUB_USERNAME = "hari1661"
-                            $DOCKER_HUB_PASSWORD = "Dockerhari"
-                            docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
-                         '''
+                    // powershell '''
+                    //         $DOCKER_HUB_USERNAME = "hari1661"
+                    //         $DOCKER_HUB_PASSWORD = "Dockerhari"
+                    //         docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+                    //      '''
+                    
+                    withCredentials([usernamePassword(credentialsId: 'hari1661', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        powershell '''
+                            docker login -u $Env:DOCKER_HUB_USERNAME -p $Env:DOCKER_HUB_PASSWORD
+                        '''
+                        powershell 'docker build -t hari1661/sit753hd .'
+                    }
 
                     powershell '''
                         $containerId = docker ps -q --filter "name=myapp_container"
